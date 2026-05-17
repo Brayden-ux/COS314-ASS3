@@ -306,6 +306,8 @@ public class GPArithmetic{
                 System.out.printf("Gen %3d | BestFit=%.4f | %s%n", gen + 1, globalBest.fitness, m);
                 System.out.println("        Expression: " + globalBest.root+"\n");
             }
+
+            if(globalBest.fitness >= 1.0) break; 
         }
 
         return globalBest;
