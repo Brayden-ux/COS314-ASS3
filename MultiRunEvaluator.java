@@ -26,7 +26,9 @@ public class MultiRunEvaluator {
         long[]   seeds = new long[NUM_RUNS];
 
         // Seeds are base + run index for reproducibility
-        for (int i = 0; i < NUM_RUNS; i++) seeds[i] = baseSeed + i * 1000L;
+        for (int i = 0; i < NUM_RUNS; i++) {
+            seeds[i] = baseSeed + i * 1000L;
+        }
 
         // GP Arithmetic
         System.out.println(" GP ARITHMETIC : 30 Runs");
@@ -135,14 +137,19 @@ public class MultiRunEvaluator {
 
     // Mean of array
     static double mean(double[] v) {
-        double s = 0; for (double x : v) s += x;
+        double s = 0;
+        for (double x : v) {
+            s += x;
+        }
         return s / v.length;
     }
 
     // Standard deviation of array
     static double std(double[] v) {
         double m = mean(v), s = 0;
-        for (double x : v) s += (x - m) * (x - m);
+        for (double x : v) {
+            s += (x - m) * (x - m);
+        }
         return Math.sqrt(s / v.length);
     }
 
@@ -152,11 +159,17 @@ public class MultiRunEvaluator {
     static void wilcoxon(double[] a, double[] b) {
         int n = a.length;
         double[] diff = new double[n];
-        for (int i = 0; i < n; i++) diff[i] = a[i] - b[i];
+        for (int i = 0; i < n; i++) {
+            diff[i] = a[i] - b[i];
+        }
 
         // Remove zeros, rank remaining absolute differences
         List<Double> nonZero = new ArrayList<>();
-        for (double d : diff) if (d != 0) nonZero.add(d);
+        for (double d : diff) {
+            if (d != 0) {
+                nonZero.add(d);
+            }
+        }
         int m = nonZero.size();
 
         if (m == 0) {
@@ -200,10 +213,11 @@ public class MultiRunEvaluator {
 
         System.out.printf("W+ = %.1f  W- = %.1f  W = %.1f  n = %d%n", Wplus, Wminus, W, m);
         System.out.printf("Normal approx: z = %.4f  p ≈ %.4f%n", z, pApprox);
-        if (pApprox < 0.05)
+        if (pApprox < 0.05) {
             System.out.println("Result: SIGNIFICANT difference (p < 0.05)");
-        else
+        } else {
             System.out.println("Result: No significant difference (p >= 0.05)");
+        }
     }
 
     // Standard normal CDF using error function approximation
@@ -213,14 +227,14 @@ public class MultiRunEvaluator {
 
     // Abramowitz & Stegun approximation
     static double erfc(double x) {
-
         double t = 1.0 / (1.0 + 0.3275911 * Math.abs(x));
-
         double poly = t * (0.254829592 + t * (-0.284496736 + t * (1.421413741
                 + t * (-1.453152027 + t * 1.061405429))));
-
         double result = poly * Math.exp(-x * x);
-
-        return (x >= 0) ? result : 2.0 - result;
+        if (x >= 0) {
+            return result;
+        } else {
+            return 2.0 - result;
+        }
     }
 }
