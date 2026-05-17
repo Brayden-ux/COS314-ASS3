@@ -33,7 +33,8 @@ public class MultiRunEvaluator {
         // GP Arithmetic
         System.out.println(" GP ARITHMETIC : 30 Runs");
 
-        int bestArithRun = 0; double bestArithAcc = -1;
+        int bestArithRun = 0; 
+        double bestArithAcc = -1;
         GPArithmetic.Individual bestArithInd = null;
 
         for (int i = 0; i < NUM_RUNS; i++) {
@@ -41,12 +42,13 @@ public class MultiRunEvaluator {
             GPArithmetic gp = new GPArithmetic(seed, train.X, train.y);
             GPArithmetic.Individual best = gp.evolve(false);  // silent
 
+            Metrics trainM = new Metrics(best.predict(train.X), train.y);
             Metrics testM = new Metrics(best.predict(test.X), test.y);
             arithTestAcc[i] = testM.accuracy;
             arithF1[i] = testM.fMeasure;
 
-            System.out.printf("Run %2d | seed=%-12d | TestAcc=%.4f | F1=%.4f%n",
-                    i + 1, seed, testM.accuracy, testM.fMeasure);
+            System.out.printf("Run %2d | seed=%-12d | Train=%.2f%% | Test=%.2f%% | F1=%.4f%n",
+                    i + 1, seed, trainM.accuracy * 100, testM.accuracy * 100, testM.fMeasure);
 
             if (testM.accuracy > bestArithAcc) {
                 bestArithAcc = testM.accuracy;
@@ -66,12 +68,13 @@ public class MultiRunEvaluator {
             GPDecisionTree gp = new GPDecisionTree(seed, train.X, train.y);
             GPDecisionTree.Individual best = gp.evolve(false);  // silent
 
+            Metrics trainM = new Metrics(best.predict(train.X), train.y);
             Metrics testM = new Metrics(best.predict(test.X), test.y);
             dtTestAcc[i] = testM.accuracy;
             dtF1[i] = testM.fMeasure;
 
-            System.out.printf("Run %2d | seed=%-12d | TestAcc=%.4f | F1=%.4f%n",
-                    i + 1, seed, testM.accuracy, testM.fMeasure);
+            System.out.printf("Run %2d | seed=%-12d | Train=%.2f%% | Test=%.2f%% | F1=%.4f%n",
+                    i + 1, seed, trainM.accuracy * 100, testM.accuracy * 100, testM.fMeasure);
 
             if (testM.accuracy > bestDTAcc) {
                 bestDTAcc = testM.accuracy;
