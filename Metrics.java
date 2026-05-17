@@ -1,8 +1,5 @@
 
-
-/**
- * Classification metrics: accuracy, precision, recall, F1-measure.
- */
+// Classification metrics: accuracy, precision, recall, F1-measure
 public class Metrics {
 
     public final double accuracy;
@@ -10,7 +7,7 @@ public class Metrics {
     public final double recall;
     public final double fMeasure;
 
-    /** tp/fp/fn/tn for class=1 (positive = recurrence) */
+    // tp/fp/fn/tn for class=1 (positive = recurrence)
     public final int tp, fp, fn, tn;
 
     public Metrics(int[] predicted, int[] actual) {
@@ -21,14 +18,33 @@ public class Metrics {
             else if (predicted[i] == 0 && actual[i] == 1) fn++;
             else tn++;
         }
-        this.tp = tp; this.fp = fp; this.fn = fn; this.tn = tn;
+        this.tp = tp;
+        this.fp = fp;
+        this.fn = fn;
+        this.tn = tn;
 
-        accuracy  = (double)(tp + tn) / actual.length;
-        double prec = (tp + fp == 0) ? 0.0 : (double) tp / (tp + fp);
-        double rec  = (tp + fn == 0) ? 0.0 : (double) tp / (tp + fn);
+        accuracy = (double)(tp + tn) / actual.length;
+        double prec;
+        if (tp + fp == 0) {
+            prec = 0.0;
+        } else {
+            prec = (double) tp / (tp + fp);
+        }
+        double rec;
+        if (tp + fn == 0) {
+            rec = 0.0;
+        } else {
+            rec = (double) tp / (tp + fn);
+        }
         precision = prec;
-        recall    = rec;
-        fMeasure  = (prec + rec == 0) ? 0.0 : 2.0 * prec * rec / (prec + rec);
+        recall = rec;
+        double fMeasure_val;
+        if (prec + rec == 0) {
+            fMeasure_val = 0.0;
+        } else {
+            fMeasure_val = 2.0 * prec * rec / (prec + rec);
+        }
+        fMeasure = fMeasure_val;
     }
 
     @Override
