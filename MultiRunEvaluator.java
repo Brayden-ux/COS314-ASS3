@@ -24,6 +24,8 @@ public class MultiRunEvaluator {
         double[] dtTestAcc = new double[NUM_RUNS];
         double[] dtF1 = new double[NUM_RUNS];
         long[]   seeds = new long[NUM_RUNS];
+        long[] arithRuntimes = new long[NUM_RUNS];
+        long[] dtRuntimes = new long[NUM_RUNS];
 
         // Seeds are base + run index for reproducibility
         for (int i = 0; i < NUM_RUNS; i++) {
@@ -40,15 +42,18 @@ public class MultiRunEvaluator {
         for (int i = 0; i < NUM_RUNS; i++) {
             long seed = seeds[i];
             GPArithmetic gp = new GPArithmetic(seed, train.X, train.y);
-            GPArithmetic.Individual best = gp.evolve(false);  // silent
+            long startTime = System.currentTimeMillis();
+            GPArithmetic.Individual best = gp.evolve(false);
+            long elapsed = System.currentTimeMillis() - startTime;
+            arithRuntimes[i] = elapsed;
 
             Metrics trainM = new Metrics(best.predict(train.X), train.y);
             Metrics testM = new Metrics(best.predict(test.X), test.y);
             arithTestAcc[i] = testM.accuracy;
             arithF1[i] = testM.fMeasure;
 
-            System.out.printf("Run %2d | seed=%-12d | Train=%.2f%% | Test=%.2f%% | F1=%.4f%n",
-                    i + 1, seed, trainM.accuracy * 100, testM.accuracy * 100, testM.fMeasure);
+            System.out.printf("Run %2d | seed=%-12d | Train=%.2f%% | Test=%.2f%% | F1=%.4f | Time=%dms%n",
+                    i + 1, seed, trainM.accuracy * 100, testM.accuracy * 100, testM.fMeasure, elapsed);
 
             if (testM.accuracy > bestArithAcc) {
                 bestArithAcc = testM.accuracy;
@@ -66,15 +71,18 @@ public class MultiRunEvaluator {
         for (int i = 0; i < NUM_RUNS; i++) {
             long seed = seeds[i];
             GPDecisionTree gp = new GPDecisionTree(seed, train.X, train.y);
-            GPDecisionTree.Individual best = gp.evolve(false);  // silent
+            long startTime = System.currentTimeMillis();
+            GPDecisionTree.Individual best = gp.evolve(false);
+            long elapsed = System.currentTimeMillis() - startTime;
+            dtRuntimes[i] = elapsed;
 
             Metrics trainM = new Metrics(best.predict(train.X), train.y);
             Metrics testM = new Metrics(best.predict(test.X), test.y);
             dtTestAcc[i] = testM.accuracy;
             dtF1[i] = testM.fMeasure;
 
-            System.out.printf("Run %2d | seed=%-12d | Train=%.2f%% | Test=%.2f%% | F1=%.4f%n",
-                    i + 1, seed, trainM.accuracy * 100, testM.accuracy * 100, testM.fMeasure);
+            System.out.printf("Run %2d | seed=%-12d | Train=%.2f%% | Test=%.2f%% | F1=%.4f | Time=%dms%n",
+                    i + 1, seed, trainM.accuracy * 100, testM.accuracy * 100, testM.fMeasure, elapsed);
 
             if (testM.accuracy > bestDTAcc) {
                 bestDTAcc = testM.accuracy;
@@ -114,13 +122,13 @@ public class MultiRunEvaluator {
         // Table 2 - Comparison of Classification Performance
         System.out.println("\nTABLE 2 – Comparison of Classification Perf.");
         System.out.printf("%-20s %10s %10s %10s %10s%n",
-                "Algorithm", "Train(%)", "Test(%)", "F-measure", "Runtime");
-        System.out.printf("%-20s %10.2f %10.2f %10.4f %10s%n",
+                "Algorithm", "Train(%)", "Test(%)", "F-measure", "Runtime(ms)");
+        System.out.printf("%-20s %10.2f %10.2f %10.4f %10d%n",
                 "GP Decision Tree",
-                dtTrainM.accuracy * 100, dtTestM.accuracy * 100, dtTestM.fMeasure, "see log");
-        System.out.printf("%-20s %10.2f %10.2f %10.4f %10s%n",
+                dtTrainM.accuracy * 100, dtTestM.accuracy * 100, dtTestM.fMeasure, dtRuntimes[bestDTRun]);
+        System.out.printf("%-20s %10.2f %10.2f %10.4f %10d%n",
                 "GP Arithmetic",
-                arithTrainM.accuracy * 100, arithTestM.accuracy * 100, arithTestM.fMeasure, "see log");
+                arithTrainM.accuracy * 100, arithTestM.accuracy * 100, arithTestM.fMeasure, arithRuntimes[bestArithRun]);
 
         // Wilcoxon signed-rank test for statistical significance
         System.out.println("\nWILCOXON SIGNED-RANK TEST");
