@@ -3,8 +3,8 @@ import java.util.*;
 
 public class GPDecisionTree {
     //parameters
-    private static final int POP_SIZE = 75;
-    private static final int MAX_GENERATIONS = 75;
+    private static final int POP_SIZE = 200;
+    private static final int MAX_GENERATIONS = 100;
     private static final int INIT_MAX_DEPTH = 4;
     private static final int MAX_DEPTH = 8;
     private static final int MUTATION_DEPTH = 3;
@@ -319,8 +319,11 @@ public class GPDecisionTree {
         System.out.print("Enter random seed (long): ");
         long seed = scanner.nextLong();
  
-        String trainPath = "Breast_train.csv";
-        String testPath  = "Breast_test.csv";
+        System.out.print("Enter training CSV filepath: ");
+        String trainPath = scanner.next();
+
+        System.out.print("Enter test CSV filepath: ");
+        String testPath = scanner.next();
  
         System.out.println("\nLoading data...");
         DataLoader train = new DataLoader(trainPath);

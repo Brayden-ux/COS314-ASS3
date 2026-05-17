@@ -3,8 +3,8 @@ import java.util.*;
 
 public class GPArithmetic{
 
-    private static final int POP_SIZE = 75;
-    private static final int MAX_GENERATIONS = 75;
+    private static final int POP_SIZE = 200;
+    private static final int MAX_GENERATIONS = 100;
     private static final int INIT_MAX_DEPTH = 4;
     private static final int MAX_DEPTH = 8;
     private static final int TOURNAMENT_SIZE = 5;
@@ -315,7 +315,7 @@ public class GPArithmetic{
 
         Scanner scanner = new Scanner(System.in);
 
-        System.out.print("Enter random seed(long): ");
+        System.out.print("Enter random seed (long): ");
         long seed = scanner.nextLong();
 
         System.out.print("Enter training CSV filepath: ");
