@@ -206,9 +206,12 @@ public class MultiRunEvaluator {
         double W = Math.min(Wplus, Wminus);
 
         // Normal approximation
-        double mu    = m * (m + 1) / 4.0;
+        double mu = m * (m + 1) / 4.0;
+
         double sigma = Math.sqrt(m * (m + 1) * (2 * m + 1) / 24.0);
-        double z     = (W - mu) / sigma;
+
+        double z = (W - mu) / sigma;
+
         double pApprox = 2.0 * normalCDF(z);   // two-tailed
 
         System.out.printf("W+ = %.1f  W- = %.1f  W = %.1f  n = %d%n", Wplus, Wminus, W, m);
