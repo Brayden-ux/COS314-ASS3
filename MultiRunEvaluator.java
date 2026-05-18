@@ -11,19 +11,22 @@ public class MultiRunEvaluator {
         System.out.print("Enter base seed (long): ");
         long baseSeed = scanner.nextLong();
 
-        String trainPath = "Breast_train.csv";
-        String testPath = "Breast_test.csv";
+       System.out.print("Enter training CSV filepath: ");
+        String trainPath = scanner.next();
+
+        System.out.print("Enter test CSV filepath: ");
+        String testPath = scanner.next();
 
         System.out.println("\nLoading data...");
         DataLoader train = new DataLoader(trainPath);
-        DataLoader test  = new DataLoader(testPath);
+        DataLoader test = new DataLoader(testPath);
         System.out.printf("Train: %d | Test: %d%n", train.n, test.n);
 
         double[] arithTestAcc = new double[NUM_RUNS];
         double[] arithF1 = new double[NUM_RUNS];
         double[] dtTestAcc = new double[NUM_RUNS];
         double[] dtF1 = new double[NUM_RUNS];
-        long[]   seeds = new long[NUM_RUNS];
+        long[] seeds = new long[NUM_RUNS];
 
         // Seeds are base + run index for reproducibility
         for (int i = 0; i < NUM_RUNS; i++) {
@@ -60,7 +63,8 @@ public class MultiRunEvaluator {
         // GP Decision Tree
         System.out.println("GP DECISION TREE : 30 Runs ");
 
-        int bestDTRun = 0; double bestDTAcc = -1;
+        int bestDTRun = 0; 
+        double bestDTAcc = -1;
         GPDecisionTree.Individual bestDTInd = null;
 
         for (int i = 0; i < NUM_RUNS; i++) {
@@ -74,7 +78,7 @@ public class MultiRunEvaluator {
             dtF1[i] = testM.fMeasure;
 
             System.out.printf("Run %2d | seed=%-12d | Train=%.2f%% | Test=%.2f%% | F1=%.4f%n",
-                    i + 1, seed, trainM.accuracy * 100, testM.accuracy * 100, testM.fMeasure);
+                i + 1, seed, trainM.accuracy * 100, testM.accuracy * 100, testM.fMeasure);
 
             if (testM.accuracy > bestDTAcc) {
                 bestDTAcc = testM.accuracy;
@@ -99,7 +103,7 @@ public class MultiRunEvaluator {
         System.out.println("Seed      : " + seeds[bestArithRun]);
         System.out.println("Expression: " + bestArithInd.root);
         Metrics arithTrainM = new Metrics(bestArithInd.predict(train.X), train.y);
-        Metrics arithTestM  = new Metrics(bestArithInd.predict(test.X),  test.y);
+        Metrics arithTestM = new Metrics(bestArithInd.predict(test.X),  test.y);
         System.out.println("Train : " + arithTrainM);
         System.out.println("Test  : " + arithTestM);
 
@@ -107,7 +111,7 @@ public class MultiRunEvaluator {
         System.out.println("Seed: " + seeds[bestDTRun]);
         // System.out.print(bestDTInd.root.prettyPrint(""));
         Metrics dtTrainM = new Metrics(bestDTInd.predict(train.X), train.y);
-        Metrics dtTestM  = new Metrics(bestDTInd.predict(test.X),  test.y);
+        Metrics dtTestM = new Metrics(bestDTInd.predict(test.X),  test.y);
         System.out.println("Train : " + dtTrainM);
         System.out.println("Test  : " + dtTestM);
 

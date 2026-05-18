@@ -10,8 +10,22 @@ FILES
 - src for source code
 
 -------------------------------
-PROGRAM EXECUTION
+MULTI-RUN EVALUATOR EXECUTION. (30 independent runs)
 -------------------------------
+
+Run:
+
+    java -jar MultiRunEvaluator.jar 
+    > Enter random seed (long): 42
+    > Enter training CSV filepath: Breast_train.csv
+    > Enter test CSV filepath: Breast_test.csv
+
+Note: Generates 30 different seeds based on given seed for reproducibility 
+
+-------------------------------
+INDIVIDUAL PROGRAM EXECUTION
+-------------------------------
+
 Run:  
 
     java -jar GPArithmetic.jar or GPDecisionTree.jar 
@@ -26,19 +40,6 @@ OUTPUT per generation:
 Gen N | BestFit=0.XXXX | Acc=... Prec=... Rec=... F1=... [TP=... FP=... FN=... TN=...]
     Expression: (symbolic expression)
 ```
-
--------------------------------
-MULTI-RUN EVALUATOR (30 independant runs)
--------------------------------
-
-Run:
-
-    java -jar MultiRunEvaluator.jar 
-    > Enter random seed (long): 42
-    > Enter training CSV filepath: Breast_train.csv
-    > Enter test CSV filepath: Breast_test.csv
-
-Note: Generates 30 different seeds based on given seed for reproducibility 
 
 OUTPUT:
 - Per-run test accuracy and F1 for both algorithms

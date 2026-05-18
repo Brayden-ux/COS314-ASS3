@@ -9,10 +9,12 @@ compile:
 	$(JAVAC) $(SRC)
 
 clean:
-	rm -f *.class
+	rm -f *.class *.jar
 
 jar: compile
-	jar cfm search.jar manifest.txt *.class README.md
+	jar cfe GPArithmetic.jar GPArithmetic *.class
+	jar cfe GPDecisionTree.jar GPDecisionTree *.class
+	jar cfe MultiRunEvaluator.jar MultiRunEvaluator *.class
 
 run-task1:
 	$(JAVA) Task1Test
